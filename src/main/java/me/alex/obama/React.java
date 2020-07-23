@@ -2,6 +2,7 @@ package me.alex.obama;
 
 import com.github.fernthedev.config.common.exceptions.ConfigLoadException;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -18,7 +19,7 @@ public class React extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e){
-        if (e.getMessage().isMentioned(e.getJDA().getSelfUser())) {
+        if (e.getMessage().isMentioned(e.getJDA().getSelfUser(), Message.MentionType.USER)) {
             e.getChannel().sendMessage("Yes? Need any of my expertise in politics or in the arts of stupidity? I am the man for the job! Just send me the numbers on the back of your credit card, the security code and expiration month and year and I will do nothing for you!").queue();
             e.getChannel().sendMessage("Note to self: This is a bot and you should not send credit card details but rather free VBucks to me.").queue();
 
