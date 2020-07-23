@@ -1,6 +1,9 @@
 package me.alex.obama;
 
+import com.github.fernthedev.config.common.exceptions.ConfigLoadException;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageHistory;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -16,6 +19,24 @@ public class React extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e){
+        if (e.getMessage().getContentRaw().equals("+spam")) {
+            if (e.getGuild().getMember(e.getAuthor()).hasPermission(Permission.MANAGE_CHANNEL)) {
+                try {
+                    Main.getConfig().syncLoad();
+
+                    boolean isSpam = Main.isSpamChannel(e.getTextChannel());
+
+                    if (isSpam) Main.removeSpamChannel(e.getTextChannel());
+                    else Main.removeSpamChannel(e.getTextChannel());
+
+                    e.getChannel().sendMessage("Will spam: " + !isSpam).queue();
+                } catch (ConfigLoadException configLoadException) {
+                    configLoadException.printStackTrace();
+                }
+            } else
+                e.getChannel().sendMessage("You don't have permission (Manage Channels) to make this a place for me to make proper and valuable statements to promote morale and sanity").queue();
+        }
+
         if (e.getMessage().getContentRaw().equals("+Fact") && e.getAuthor() != e.getJDA().getSelfUser()){
             MessageHistory prevMessg = e.getChannel().getHistory();
             if (imagebytes == null) {
