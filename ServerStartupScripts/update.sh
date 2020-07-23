@@ -48,7 +48,7 @@ update() {
 
   git pull
 
-  if ! $(buildJar $copyJar) ; then
+  if ! buildJar $copyJar ; then
     echo "FAILED TO DOWNLOAD LATEST VERSION OF MINECRAFT SERVER"
     return 1
   else
