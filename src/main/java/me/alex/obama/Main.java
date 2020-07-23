@@ -114,6 +114,9 @@ public class Main {
         if (channels.contains(channel.getIdLong())) return;
 
         channels.add(channel.getIdLong());
+
+        new Autos(channel);
+
         try {
             config.syncSave();
         } catch (ConfigLoadException e) {
