@@ -78,7 +78,7 @@ buildJar() {
 }
 
 checkService() {
-  if P=$(pgrep $1)
+  if P=$(systemctl is-active --quiet obamabot)
   then
     echo "start"
   else
