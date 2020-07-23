@@ -19,8 +19,8 @@ public class React extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e){
-        if (e.getMessage().getContentRaw().equals("+spam")) {
-            if (e.getGuild().getMember(e.getAuthor()).hasPermission(Permission.MANAGE_CHANNEL)) {
+        if (e.getMessage().getContentRaw().equals("+Spam")) {
+            if (Objects.requireNonNull(e.getGuild().getMember(e.getAuthor())).hasPermission(Permission.MANAGE_CHANNEL)) {
                 try {
                     Main.getConfig().syncLoad();
 
