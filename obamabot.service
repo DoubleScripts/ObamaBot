@@ -1,0 +1,34 @@
+[Unit]
+Description=Obama bot Service
+Documentation=
+
+Wants=network.target
+# After=network.target
+# AllowIsolate=true
+
+[Service]
+User=bot
+Group=bot
+Type=forking
+Nice=5
+KillMode=mixed
+RestartSec=50
+Restart=on-failure
+RestartSec=5s
+# SuccessExitStatus=0 1
+SuccessExitStatus=143 0 1
+
+
+ProtectHome=true
+ProtectSystem=full
+PrivateDevices=true
+NoNewPrivileges=true
+PrivateTmp=true
+# InaccessibleDirectories=/root /sys /srv -/opt /media -/lost+found
+ReadWriteDirectories=/srv/bots/Obamabot /usr/bin/screen
+WorkingDirectory=/srv/bots/Obamabot
+
+ExecStart=/usr/bin/screen -dmS obamabot ./ServerStartupScripts/ServerStart.sh "$(pwd)"
+
+[Install]
+WantedBy=multi-user.target
