@@ -28,7 +28,7 @@ PrivateTmp=true
 ReadWriteDirectories=/srv/bots/ObamaBot /usr/bin/screen
 WorkingDirectory=/srv/bots/ObamaBot
 
-ExecStart=/usr/bin/screen -dmS obamabot bash ./ServerStartupScripts/ServerStart.sh "$(pwd)"
+ExecStart=/usr/bin/screen -dmS obamabot bash ./ServerStartupScripts/ServerStart.sh "/srv/bots/ObamaBot" # This must be the directory where the jar will be
 
 [Install]
 WantedBy=multi-user.target
