@@ -10,7 +10,7 @@ echo Installing libraries
 sudo apt install openjdk-11-jre-headless jq curl bash maven screen
 
 echo Adding cronjob
-cronjob="*/5 * * * * bash '$(pwd)/cronscript.sh'"
+cronjob="*/5 * * * * bash '$(pwd)/cronscript.sh' $(pwd)"
 
 # Cron requires a root user to restart the service.
 (sudo crontab -u root -l; echo "$cronjob" ) | sudo crontab -u root -
