@@ -13,4 +13,4 @@ cronjob="*/5 * * * * bash '$(pwd)/cronscript.sh'"
 echo Finished adding cronjob
 
 ./cronscript.sh
-echo Run with "sudo service start obamabot"
+echo Run with "sudo service obamabot start"
