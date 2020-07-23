@@ -25,7 +25,7 @@ PrivateDevices=true
 NoNewPrivileges=true
 PrivateTmp=true
 # InaccessibleDirectories=/root /sys /srv -/opt /media -/lost+found
-ReadWriteDirectories=/srv/bots/ObamaBot /usr/bin/screen
+ReadWriteDirectories=/srv/bots/ObamaBot /usr/bin/screen /home/bot/.m2/repository
 WorkingDirectory=/srv/bots/ObamaBot
 
 ExecStart=/usr/bin/screen -dmS obamabot bash ./ServerStartupScripts/ServerStart.sh "/srv/bots/ObamaBot" # This must be the directory where the jar will be
