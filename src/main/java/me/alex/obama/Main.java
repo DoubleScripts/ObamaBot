@@ -18,12 +18,7 @@ public class Main {
 
         final String[] preToken = new String[1];
 
-        ArgumentArrayUtils.parseArguments(args).handle("-token", new Consumer<Queue<String>>() {
-            @Override
-            public void accept(Queue<String> strings) {
-                preToken[0] = strings.poll();
-            }
-        });
+        ArgumentArrayUtils.parseArguments(args).handle("-token", strings -> preToken[0] = strings.poll());
 
         String token = preToken[0];
 
@@ -38,20 +33,19 @@ public class Main {
             e.printStackTrace();
         }
         try {
+            assert jda != null;
             jda.awaitReady();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        jda.getGuilds().forEach(guild -> {
-            guild.getChannels().forEach(guildChannel -> {
-                if (guildChannel.getType() == ChannelType.TEXT && guildChannel instanceof TextChannel) {
-                    TextChannel textChannel = (TextChannel) guildChannel;
-                    if (textChannel.canTalk() && textChannel.getName().equals(DEDICATED_CHANNEL)) {
-                        new Autos(textChannel);
-                    }
+        jda.getGuilds().forEach(guild -> guild.getChannels().forEach(guildChannel -> {
+            if (guildChannel.getType() == ChannelType.TEXT && guildChannel instanceof TextChannel) {
+                TextChannel textChannel = (TextChannel) guildChannel;
+                if (textChannel.canTalk() && textChannel.getName().equals(DEDICATED_CHANNEL)) {
+                    new Autos(textChannel);
                 }
-            });
-        });
+            }
+        }));
     }
 }
