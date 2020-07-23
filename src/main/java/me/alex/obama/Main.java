@@ -6,13 +6,17 @@ import com.github.fernthedev.config.gson.GsonConfig;
 import com.github.fernthedev.fernutils.console.ArgumentArrayUtils;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.*;
-
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
-import java.util.*;
-import java.util.function.Consumer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Main {
 
@@ -115,7 +119,8 @@ public class Main {
 
         channels.add(channel.getIdLong());
 
-        new Autos(channel);
+        if (!Autos.getAutoInstances().containsKey(channel.getIdLong()))
+            new Autos(channel);
 
         try {
             config.syncSave();
