@@ -27,7 +27,7 @@ public class React extends ListenerAdapter {
                     boolean isSpam = Main.isSpamChannel(e.getTextChannel());
 
                     if (isSpam) Main.removeSpamChannel(e.getTextChannel());
-                    else Main.removeSpamChannel(e.getTextChannel());
+                    else Main.addSpamChannel(e.getTextChannel());
 
                     e.getChannel().sendMessage("Will spam: " + !isSpam).queue();
                 } catch (ConfigLoadException configLoadException) {
