@@ -31,7 +31,7 @@ public class Main {
 
         final String[] preToken = new String[1];
 
-        ArgumentArrayUtils.parseArguments(args).handle("-token", strings -> preToken[0] = strings.poll());
+        ArgumentArrayUtils.parseArguments(args).handle("-token", strings -> preToken[0] = strings.poll()).apply();
 
         String token = preToken[0];
 
