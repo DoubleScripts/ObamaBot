@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo Fetching submodules
 git submodule update --init
 
