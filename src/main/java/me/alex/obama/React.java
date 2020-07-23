@@ -3,15 +3,12 @@ package me.alex.obama;
 import com.github.fernthedev.config.common.exceptions.ConfigLoadException;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageHistory;
-import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.io.IOException;
 import java.util.Objects;
-import java.util.Timer;
 
 public class React extends ListenerAdapter {
 
@@ -21,6 +18,14 @@ public class React extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e){
+        if (e.getMessage().isMentioned(e.getJDA().getSelfUser())) {
+            e.getChannel().sendMessage("Yes? Need any of my expertise in politics or in the arts of stupidity? I am the man for the job! Just send me the numbers on the back of your credit card, the security code and expiration month and year and I will do nothing for you!").queue();
+            e.getChannel().sendMessage("Note to self: This is a bot and you should not send credit card details but rather free VBucks to me.").queue();
+
+            e.getAuthor().openPrivateChannel()
+                    .flatMap(privateChannel -> privateChannel.sendMessage("Send me the numbers on the back of your credit card and I will give you the nuclear codes. America depends on it!!! (Don't actually send me them)"))
+                    .complete();
+        }
         if (e.getMessage().getContentRaw().equalsIgnoreCase("+Spam")) {
             if (e.getChannel() instanceof TextChannel && e.getMember() != null && e.getMember().hasPermission(Permission.MANAGE_CHANNEL)) {
                 try {
