@@ -22,8 +22,8 @@ public class Autos {
     }
 
     private void runTimer() {
-        int upperBound = 3 * 60  * 1000;
-        int lowerBound = 1 * 60 * 1000;
+        int upperBound = 9 * 60  * 1000;
+        int lowerBound = 4 * 60 * 1000;
         int delay = (new Random().nextInt(upperBound - lowerBound) + lowerBound);
         timer.schedule(new TimerTask() {
             @Override
