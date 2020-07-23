@@ -1,3 +1,6 @@
+echo Fetching submodules
+git submodule update --init
+
 echo Adding SystemD service
 sudo cp ./obamabot.service /etc/systemd/system
 sudo systemctl daemon-reload
