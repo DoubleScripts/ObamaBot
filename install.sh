@@ -8,7 +8,7 @@ sudo systemctl enable obamabot.service
 echo Enabled Obamabot service
 
 echo Installing libraries
-sudo apt install openjdk-11-jre jq curl bash maven
+sudo apt install openjdk-11-jre-headless jq curl bash maven
 
 echo Adding cronjob
 cronjob="*/5 * * * * bash '$(pwd)/cronscript.sh'"
