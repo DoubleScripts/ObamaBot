@@ -28,7 +28,7 @@ PrivateTmp=true
 ReadWriteDirectories=/srv/bots/ObamaBot /usr/bin/screen
 WorkingDirectory=/srv/bots/ObamaBot
 
-ExecStart=/usr/bin/screen -dmS obamabot ./ServerStartupScripts/ServerStart.sh "$(pwd)"
+ExecStart=/usr/bin/screen -dmS obamabot bash ./ServerStartupScripts/ServerStart.sh "$(pwd)"
 
 [Install]
 WantedBy=multi-user.target
