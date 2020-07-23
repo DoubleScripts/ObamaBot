@@ -1,18 +1,33 @@
 package me.alex.obama;
 
+import com.github.fernthedev.fernutils.console.ArgumentArrayUtils;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.*;
 
 
 import javax.security.auth.login.LoginException;
+import java.util.Queue;
+import java.util.function.Consumer;
 
 public class Main {
 
     private static final String DEDICATED_CHANNEL = "obama";
 
     public static void main(String[] args){
-        JDABuilder jdaBuilder = JDABuilder.createDefault(Constants.token);
+
+        final String[] preToken = new String[1];
+
+        ArgumentArrayUtils.parseArguments(args).handle("-token", new Consumer<Queue<String>>() {
+            @Override
+            public void accept(Queue<String> strings) {
+                preToken[0] = strings.poll();
+            }
+        });
+
+        String token = preToken[0];
+
+        JDABuilder jdaBuilder = JDABuilder.createDefault(token);
         JDA jda = null;
         React react = new React();
         jdaBuilder.addEventListeners(react);
