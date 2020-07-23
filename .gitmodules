@@ -1,3 +1,4 @@
 [submodule "ServerStartupScripts"]
 	path = ServerStartupScripts
 	url = https://github.com/Fernthedev/ServerStartupScripts.git
+	branch = master
