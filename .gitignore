@@ -110,3 +110,9 @@ buildNumber.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
 
+
+current_version.txt
+
+config.json
+
+.idea/sonarlint/
