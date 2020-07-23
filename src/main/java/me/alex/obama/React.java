@@ -3,6 +3,8 @@ package me.alex.obama;
 import com.github.fernthedev.config.common.exceptions.ConfigLoadException;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageHistory;
+import net.dv8tion.jda.api.entities.PrivateChannel;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -19,8 +21,8 @@ public class React extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e){
-        if (e.getMessage().getContentRaw().equals("+Spam")) {
-            if (Objects.requireNonNull(e.getGuild().getMember(e.getAuthor())).hasPermission(Permission.MANAGE_CHANNEL)) {
+        if (e.getMessage().getContentRaw().equalsIgnoreCase("+Spam")) {
+            if (e.getChannel() instanceof TextChannel && e.getMember() != null && e.getMember().hasPermission(Permission.MANAGE_CHANNEL)) {
                 try {
                     Main.getConfig().syncLoad();
 
