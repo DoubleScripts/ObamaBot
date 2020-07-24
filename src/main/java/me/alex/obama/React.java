@@ -33,12 +33,12 @@ public class React extends ListenerAdapter {
                 try {
                     Main.getConfig().syncLoad();
 
-                    boolean isSpam = Main.isSpamChannel(e.getTextChannel());
+                    boolean isSpam = Main.getConfig().isChannelInRegistry(e.getTextChannel(), ChannelList.SPAM);
 
-                    if (isSpam) Main.removeSpamChannel(e.getTextChannel());
-                    else Main.addSpamChannel(e.getTextChannel());
+                    if (isSpam) Main.getConfig().removeChannel(e.getTextChannel(), ChannelList.SPAM);
+                    else Main.getConfig().addChannel(e.getTextChannel(), ChannelList.SPAM);
 
-                    e.getChannel().sendMessage("Will spam: " + !isSpam).queue();
+                    e.getChannel().sendMessage("Will spam fern: " + !isSpam).queue();
                 } catch (ConfigLoadException configLoadException) {
                     configLoadException.printStackTrace();
                 }
@@ -89,6 +89,8 @@ public class React extends ListenerAdapter {
                 e.getChannel().sendMessage("Need help with that? Yes or no?").queue();
             }
         }
+
+
     }
 
     public static byte[] getFileAsBytes(String fileName) throws IOException {
