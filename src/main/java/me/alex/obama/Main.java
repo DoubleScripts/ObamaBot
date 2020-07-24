@@ -13,15 +13,13 @@ import net.dv8tion.jda.api.entities.TextChannel;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Main {
 
     private static final File CONFIG_FIlE = new File("./config.json");
     private static Config<BotConfigData> config;
+
 
     public static void main(String[] args){
 
@@ -50,7 +48,7 @@ public class Main {
         JDA jda = null;
         React react = new React();
         jdaBuilder.addEventListeners(react);
-        jdaBuilder.setActivity(Activity.watching("+Fact"));
+        jdaBuilder.setActivity(Activity.watching("+Fact. ID: " + UUID.randomUUID()));
         try {
             jda = jdaBuilder.build();
         } catch (LoginException e) {
