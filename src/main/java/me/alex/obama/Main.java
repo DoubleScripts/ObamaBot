@@ -4,27 +4,32 @@ import com.github.fernthedev.config.common.Config;
 import com.github.fernthedev.config.common.exceptions.ConfigLoadException;
 import com.github.fernthedev.config.gson.GsonConfig;
 import com.github.fernthedev.fernutils.console.ArgumentArrayUtils;
+import kotlin.Unit;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
 
     private static final File CONFIG_FIlE = new File("./config.json");
-    private static Config<BotConfigData> config;
+    private static ConfigManager<? extends Config<BotConfigData>> config;
 
+    private static final ExecutorService executorService = Executors.newCachedThreadPool();
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
         try {
-            config = new GsonConfig<>(new BotConfigData(), CONFIG_FIlE);
+            config = new ConfigManager<>(new GsonConfig<>(new BotConfigData(), CONFIG_FIlE));
             config.load();
         } catch (ConfigLoadException e) {
             e.printStackTrace();
@@ -65,86 +70,48 @@ public class Main {
 
         JDA finalJda = jda;
 
-
-        // Copy to avoid writing and reading errors.
-        new HashMap<>(config.getConfigData().getBotSpamChannels()).forEach((guildId, channelIds) -> {
+        new HashMap<>(config.getServerList()).forEach((guildId, serverSettings) -> {
             Guild guild = finalJda.getGuildById(guildId);
 
             if (guild == null) {
-                config.getConfigData().getBotSpamChannels().remove(guildId);
+                config.removeGuild(guildId);
+                config.getConfigData().getGuildSettingsMap().remove(guildId);
                 return;
             }
 
-            for (long channelId : channelIds) {
-                if (guild.getGuildChannelById(ChannelType.TEXT, channelId) == null) {
-                    config.getConfigData().getBotSpamChannels().get(guildId).remove(channelId);
-                    continue;
-                }
-
+            serverSettings.unmodifiableChannelListsListMap().values().forEach(channelIdList -> channelIdList.forEach(channelId -> {
                 TextChannel textChannel = guild.getTextChannelById(channelId);
 
+                if (textChannel == null) {
+                    config.removeChannel(guild, channelId, ChannelList.SPAM);
+                }
+            }));
+
+            for (long channelId : serverSettings.getChannels(ChannelList.SPAM)) {
+                TextChannel textChannel = guild.getTextChannelById(channelId);
+
+                assert textChannel != null;
                 new Autos(textChannel);
             }
+        });
 
+        config.registerEventListener(ChannelList.SPAM, (guild, channelId, added) -> {
 
+            if (added && !Autos.getAutoInstances().containsKey(channelId)) {
+                TextChannel textChannel = guild.getTextChannelById(channelId);
+                new Autos(Objects.requireNonNull(textChannel));
+            }
+
+            return Unit.INSTANCE;
         });
     }
 
-    public static Config<BotConfigData> getConfig() {
+    public static ConfigManager<? extends Config<BotConfigData>> getConfig() {
         return config;
     }
 
-    public static boolean isSpamChannel(TextChannel channel) {
-        Guild guild = channel.getGuild();
 
-        Map<Long, List<Long>> botSpamChannels = config.getConfigData().getBotSpamChannels();
-
-        return botSpamChannels.containsKey(guild.getIdLong())
-                && botSpamChannels.get(guild.getIdLong()).contains(channel.getIdLong());
-    }
-
-    public static void addSpamChannel(TextChannel channel) {
-        Map<Long, List<Long>> botSpamChannels = config.getConfigData().getBotSpamChannels();
-
-        Guild guild = channel.getGuild();
-
-        if (!botSpamChannels.containsKey(guild.getIdLong()))
-            botSpamChannels.put(guild.getIdLong(), new ArrayList<>());
-
-        List<Long> channels = botSpamChannels.get(guild.getIdLong());
-
-        if (channels.contains(channel.getIdLong())) return;
-
-        channels.add(channel.getIdLong());
-
-        if (!Autos.getAutoInstances().containsKey(channel.getIdLong()))
-            new Autos(channel);
-
-        try {
-            config.syncSave();
-        } catch (ConfigLoadException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void removeSpamChannel(TextChannel channel) {
-        Map<Long, List<Long>> botSpamChannels = config.getConfigData().getBotSpamChannels();
-
-        if (botSpamChannels.containsKey(channel.getGuild().getIdLong())) {
-            List<Long> channels = botSpamChannels.get(channel.getGuild().getIdLong());
-
-            if (!channels.contains(channel.getIdLong())) return;
-
-            channels.remove(channel.getIdLong());
-
-            if (channels.isEmpty())
-                botSpamChannels.remove(channel.getGuild().getIdLong());
-
-            try {
-                config.syncSave();
-            } catch (ConfigLoadException e) {
-                e.printStackTrace();
-            }
-        }
+    public static ExecutorService getExecutorService() {
+        return executorService;
     }
 }

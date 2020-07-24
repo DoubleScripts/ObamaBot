@@ -35,7 +35,7 @@ public class Autos {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (!Main.isSpamChannel(channel)) return;
+                if (!Main.getConfig().isChannelInRegistry(channel, ChannelList.SPAM)) return;
 
                 if (channel.canTalk()) {
                     channel.sendMessage(getRandomLine()).queue();
