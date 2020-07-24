@@ -4,6 +4,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.IOException
 import java.util.*
+import java.util.regex.Pattern
 import java.util.stream.Collectors
 
 object SwearCheck {
@@ -42,7 +43,7 @@ object SwearCheck {
         val strings: MutableList<String> = ArrayList()
 
         // Ignore casing
-        swearWords.filter { message.toLowerCase().contains(it.toLowerCase()) }
+        swearWords.filter { message.toLowerCase().contains(Regex("\\b${it.toLowerCase()}\\b")) }
                 .toCollection(strings);
 
         return strings
