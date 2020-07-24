@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 public class React extends ListenerAdapter {
@@ -76,6 +77,13 @@ public class React extends ListenerAdapter {
                     .getContentRaw() + "\n **Not bad**")
                     .addFile(imagebytes2, "Funny.png")
                     .queue();
+        }
+
+        if (e.getAuthor() != e.getJDA().getSelfUser()) {
+            List<String> words = SwearCheck.containsSwear(e.getMessage().getContentRaw());
+            if (!words.isEmpty()) {
+                e.getChannel().sendMessage(e.getAuthor().getAsMention() + " Hey! Swear words are not allowed in my America! If we want to make America great again, we must not use such horrifying language!\n> " + words.toString()).queue();
+            }
         }
     }
 
