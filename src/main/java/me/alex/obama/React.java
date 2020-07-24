@@ -84,6 +84,10 @@ public class React extends ListenerAdapter {
             if (!words.isEmpty()) {
                 e.getChannel().sendMessage(e.getAuthor().getAsMention() + " Hey! Swear words are not allowed in my America! If we want to make America great again, we must not use such horrifying language!\n> " + words.toString()).queue();
             }
+
+            if (e.getMessage().getContentRaw().endsWith("?")) {
+                e.getChannel().sendMessage("Need help with that? Yes or no?").queue();
+            }
         }
     }
 
