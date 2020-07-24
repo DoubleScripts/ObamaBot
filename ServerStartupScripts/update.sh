@@ -46,7 +46,10 @@ update() {
 
   echo "UPDATING TO NEW VERSION"
 
-  git pull
+   if ! git pull ; then
+    echo Unable to pull from git repo
+    return 1
+  fi
 
   if ! buildJar $copyJar ; then
     echo "FAILED TO DOWNLOAD LATEST VERSION OF MINECRAFT SERVER"
