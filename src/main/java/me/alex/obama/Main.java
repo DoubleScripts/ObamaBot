@@ -10,9 +10,12 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.apache.commons.io.FileUtils;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
@@ -28,10 +31,68 @@ public class Main {
 
     public static void main(String[] args) {
 
+        // Make config backup
         try {
-            config = new ConfigManager<>(new GsonConfig<>(new BotConfigData(), CONFIG_FIlE));
-            config.load();
-        } catch (ConfigLoadException e) {
+            FileUtils.copyFile(CONFIG_FIlE, new File("./config.json.backup"));
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+
+        try {
+            try {
+                config = new ConfigManager<>(new GsonConfig<>(new BotConfigData(), CONFIG_FIlE));
+                config.load();
+
+
+                // TODO: Remove this temporary migration code
+                // Attempt migration
+                try {
+                    BotConfigData botConfigData = new BotConfigData();
+
+                    GsonConfig<OldConfigData> oldConfig = new GsonConfig<>(new OldConfigData(), CONFIG_FIlE);
+                    oldConfig.load();
+
+                    // If config values are not equal
+                    if (
+                            !oldConfig.getConfigData().getToken().equals(config.getConfigData().getToken()) ||
+                                    (!oldConfig.getConfigData().getBotSpamChannels().isEmpty() && config.getConfigData().getGuildSettingsMap().isEmpty())
+                    ) {
+
+                        System.out.println("Migrating old config values!");
+
+                        botConfigData.setToken(oldConfig.getConfigData().getToken());
+                        ConfigManager<? extends Config<BotConfigData>> testConfig = new ConfigManager<>(new GsonConfig<>(botConfigData, CONFIG_FIlE));
+
+
+                        oldConfig.getConfigData().getBotSpamChannels().forEach((guildId, channelIds) -> channelIds.forEach(channelId ->
+                                testConfig.addChannel(guildId, channelId, ChannelList.SPAM))
+                        );
+
+                        testConfig.save();
+                        config = testConfig;
+                        System.out.println("Successfully migrated and saved old config values!");
+                    }
+                    //
+                    //
+
+
+                } catch (ConfigLoadException e) {
+                    e.printStackTrace();
+                }
+
+            } catch (Exception ee) {
+                ee.printStackTrace();
+                config = new ConfigManager<>(new GsonConfig<>(new BotConfigData(), CONFIG_FIlE));
+                config.load();
+
+                System.out.println("Trying to make new config");
+
+                Files.delete(CONFIG_FIlE.toPath());
+
+                config = new ConfigManager<>(new GsonConfig<>(new BotConfigData(), CONFIG_FIlE));
+                config.load();
+            }
+        } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
@@ -95,10 +156,12 @@ public class Main {
             }
         });
 
-        config.registerEventListener(ChannelList.SPAM, (guild, channelId, added) -> {
+        JDA finalJda1 = jda;
+        config.registerEventListener(ChannelList.SPAM, (guildId, channelId, added) -> {
 
             if (added && !Autos.getAutoInstances().containsKey(channelId)) {
-                TextChannel textChannel = guild.getTextChannelById(channelId);
+                Guild guild = finalJda1.getGuildById(guildId);
+                TextChannel textChannel = Objects.requireNonNull(guild).getTextChannelById(channelId);
                 new Autos(Objects.requireNonNull(textChannel));
             }
 
