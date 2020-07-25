@@ -56,7 +56,7 @@ public class React extends ListenerAdapter {
                     if (isSpam) Main.getConfig().removeChannel(e.getTextChannel(), ChannelList.ANNOYING);
                     else Main.getConfig().addChannel(e.getTextChannel(), ChannelList.ANNOYING);
 
-                    e.getChannel().sendMessage("Will spam fern: " + !isSpam).queue();
+                    e.getChannel().sendMessage("Will be an annoying but likeable bot: " + !isSpam).queue();
                 } catch (ConfigLoadException configLoadException) {
                     configLoadException.printStackTrace();
                 }
