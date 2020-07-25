@@ -14,7 +14,7 @@ import kotlin.collections.ArrayList
  * @param boolean if the channel was added, true, else removed
  *
  */
-typealias EventListener = (Guild, Long, Boolean) -> Unit
+typealias EventListener = (Long, Long, Boolean) -> Unit
 
 class ConfigManager<T : Config<BotConfigData>>(private val config: T) {
 
@@ -34,20 +34,24 @@ class ConfigManager<T : Config<BotConfigData>>(private val config: T) {
         eventMap[channelList]!!.add(eventListener);
     }
 
-    private fun createServerSettings(guildChannel: Guild): ServerSettings {
+    private fun createServerSettings(guildChannel: Long): ServerSettings {
         val botSpamChannels = config.configData.guildSettingsMap
 
-        if (botSpamChannels.containsKey(guildChannel.idLong))
-            return botSpamChannels[guildChannel.idLong]!!
+        if (botSpamChannels.containsKey(guildChannel))
+            return botSpamChannels[guildChannel]!!
 
-        botSpamChannels[guildChannel.idLong] = ServerSettings()
+        botSpamChannels[guildChannel] = ServerSettings()
 
-        return botSpamChannels[guildChannel.idLong]!!
+        return botSpamChannels[guildChannel]!!
     }
 
-    fun getServerSettings(guildChannel: Guild): ServerSettings? {
+    protected fun getServerSettings(guildChannel: Guild): ServerSettings? {
+        return getServerSettings(guildChannel.idLong)
+    }
+
+    protected fun getServerSettings(guildChannel: Long): ServerSettings? {
         val botSpamChannels = config.configData.guildSettingsMap
-        return botSpamChannels[guildChannel.idLong]
+        return botSpamChannels[guildChannel]
     }
 
     fun removeGuild(guild: Long) {
@@ -60,6 +64,10 @@ class ConfigManager<T : Config<BotConfigData>>(private val config: T) {
     }
 
     fun addChannel(guild: Guild, guildChannel: Long, channelLists: ChannelList) {
+        addChannel(guild, guildChannel, channelLists)
+    }
+
+    protected fun addChannel(guild: Long, guildChannel: Long, channelLists: ChannelList) {
         var serverSettings = getServerSettings(guild)
 
         if (serverSettings == null) {
@@ -75,6 +83,7 @@ class ConfigManager<T : Config<BotConfigData>>(private val config: T) {
         }
 
         ThreadUtils.runForLoopAsync(getEventListeners(channelLists)) {listener ->
+
             listener(guild, guildChannel, true)
         }.runThreads(Main.getExecutorService())
     }
@@ -88,7 +97,7 @@ class ConfigManager<T : Config<BotConfigData>>(private val config: T) {
         var serverSettings = getServerSettings(guild)
 
         if (serverSettings == null) {
-            serverSettings = createServerSettings(guild)
+            serverSettings = createServerSettings(guild.idLong)
         }
 
         serverSettings.removeChannel(channelLists, guildChannel)
@@ -103,7 +112,7 @@ class ConfigManager<T : Config<BotConfigData>>(private val config: T) {
         }
 
         ThreadUtils.runForLoopAsync(getEventListeners(channelLists)) {listener ->
-            listener(guild, guildChannel, false)
+            listener(guild.idLong, guildChannel, false)
         }.runThreads(Main.getExecutorService())
     }
 
