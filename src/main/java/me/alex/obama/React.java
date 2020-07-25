@@ -64,6 +64,25 @@ public class React extends ListenerAdapter {
                 e.getChannel().sendMessage("You don't have permission (Manage Channels) to make this a place for me to make proper and valuable statements to promote morale and sanity").queue();
         }
 
+
+        if (e.getMessage().getContentRaw().equalsIgnoreCase("+swear")) {
+            if (e.getChannel() instanceof TextChannel && e.getMember() != null && e.getMember().hasPermission(Permission.MANAGE_CHANNEL)) {
+                try {
+                    Main.getConfig().syncLoad();
+
+                    boolean isSpam = !Main.getConfig().isChannelInRegistry(e.getTextChannel(), ChannelList.SWEAR);
+
+                    if (isSpam) Main.getConfig().removeChannel(e.getTextChannel(), ChannelList.SWEAR);
+                    else Main.getConfig().addChannel(e.getTextChannel(), ChannelList.SWEAR);
+
+                    e.getChannel().sendMessage("Tolerance to naughty words: " + !isSpam).queue();
+                } catch (ConfigLoadException configLoadException) {
+                    configLoadException.printStackTrace();
+                }
+            } else
+                e.getChannel().sendMessage("You don't have permission (Manage Channels) to make this a place for me to make proper and valuable statements to promote morale and sanity").queue();
+        }
+
         if (e.getMessage().getContentRaw().equals("+Fact") && e.getAuthor() != e.getJDA().getSelfUser()){
             MessageHistory prevMessg = e.getChannel().getHistory();
             if (imagebytes == null) {
@@ -99,17 +118,24 @@ public class React extends ListenerAdapter {
 
         if (e.getAuthor() != e.getJDA().getSelfUser()) {
             List<String> words = SwearCheck.containsSwear(e.getMessage().getContentRaw());
-            if (!words.isEmpty()) {
-                e.getChannel().sendMessage(e.getAuthor().getAsMention() + " Hey! Swear words are not allowed in my America! If we want to make America great again, we must not use such horrifying language!\n> " + words.toString()).queue();
-            }
+            try {
+                Main.getConfig().syncLoad();
 
-            boolean isSpam = Main.getConfig().isChannelInRegistry(e.getTextChannel(), ChannelList.ANNOYING);
-            if (e.getMessage().getContentRaw().endsWith("?") && isSpam) {
-                e.getChannel().sendMessage("Need help with that? Yes or no?").queue();
+
+                boolean isSwear = !Main.getConfig().isChannelInRegistry(e.getTextChannel(), ChannelList.SWEAR);
+
+                if (!words.isEmpty() && isSwear) {
+                    e.getChannel().sendMessage(e.getAuthor().getAsMention() + " Hey! Swear words are not allowed in my America! If we want to make America great again, we must not use such horrifying language!\n> " + words.toString()).queue();
+                }
+
+                boolean isSpam = Main.getConfig().isChannelInRegistry(e.getTextChannel(), ChannelList.ANNOYING);
+                if (e.getMessage().getContentRaw().endsWith("?") && isSpam) {
+                    e.getChannel().sendMessage("Need help with that? Yes or no?").queue();
+                }
+            } catch (ConfigLoadException configLoadException) {
+                configLoadException.printStackTrace();
             }
         }
-
-
     }
 
     public static byte[] getFileAsBytes(String fileName) throws IOException {

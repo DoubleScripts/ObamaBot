@@ -4,6 +4,7 @@ public enum ChannelList {
 
     SPAM,
     ANNOYING,
-    REPEAT
+    REPEAT,
+    SWEAR
 
 }
