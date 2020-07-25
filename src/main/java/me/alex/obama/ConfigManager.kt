@@ -64,7 +64,7 @@ class ConfigManager<T : Config<BotConfigData>>(private val config: T) {
     }
 
     fun addChannel(guild: Guild, guildChannel: Long, channelLists: ChannelList) {
-        addChannel(guild, guildChannel, channelLists)
+        addChannel(guild.idLong, guildChannel, channelLists)
     }
 
     protected fun addChannel(guild: Long, guildChannel: Long, channelLists: ChannelList) {
