@@ -70,12 +70,12 @@ public class React extends ListenerAdapter {
                 try {
                     Main.getConfig().syncLoad();
 
-                    boolean isSpam = !Main.getConfig().isChannelInRegistry(e.getTextChannel(), ChannelList.SWEAR);
+                    boolean isSpam = Main.getConfig().isChannelInRegistry(e.getTextChannel(), ChannelList.SWEAR);
 
                     if (isSpam) Main.getConfig().removeChannel(e.getTextChannel(), ChannelList.SWEAR);
                     else Main.getConfig().addChannel(e.getTextChannel(), ChannelList.SWEAR);
 
-                    e.getChannel().sendMessage("Tolerance to naughty words: " + !isSpam).queue();
+                    e.getChannel().sendMessage("Tolerance to naughty words: " + isSpam).queue();
                 } catch (ConfigLoadException configLoadException) {
                     configLoadException.printStackTrace();
                 }
