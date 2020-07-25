@@ -46,6 +46,24 @@ public class React extends ListenerAdapter {
                 e.getChannel().sendMessage("You don't have permission (Manage Channels) to make this a place for me to make proper and valuable statements to promote morale and sanity").queue();
         }
 
+        if (e.getMessage().getContentRaw().equalsIgnoreCase("+annoying")) {
+            if (e.getChannel() instanceof TextChannel && e.getMember() != null && e.getMember().hasPermission(Permission.MANAGE_CHANNEL)) {
+                try {
+                    Main.getConfig().syncLoad();
+
+                    boolean isSpam = Main.getConfig().isChannelInRegistry(e.getTextChannel(), ChannelList.ANNOYING);
+
+                    if (isSpam) Main.getConfig().removeChannel(e.getTextChannel(), ChannelList.ANNOYING);
+                    else Main.getConfig().addChannel(e.getTextChannel(), ChannelList.ANNOYING);
+
+                    e.getChannel().sendMessage("Will spam fern: " + !isSpam).queue();
+                } catch (ConfigLoadException configLoadException) {
+                    configLoadException.printStackTrace();
+                }
+            } else
+                e.getChannel().sendMessage("You don't have permission (Manage Channels) to make this a place for me to make proper and valuable statements to promote morale and sanity").queue();
+        }
+
         if (e.getMessage().getContentRaw().equals("+Fact") && e.getAuthor() != e.getJDA().getSelfUser()){
             MessageHistory prevMessg = e.getChannel().getHistory();
             if (imagebytes == null) {
@@ -85,7 +103,8 @@ public class React extends ListenerAdapter {
                 e.getChannel().sendMessage(e.getAuthor().getAsMention() + " Hey! Swear words are not allowed in my America! If we want to make America great again, we must not use such horrifying language!\n> " + words.toString()).queue();
             }
 
-            if (e.getMessage().getContentRaw().endsWith("?")) {
+            boolean isSpam = Main.getConfig().isChannelInRegistry(e.getTextChannel(), ChannelList.ANNOYING);
+            if (e.getMessage().getContentRaw().endsWith("?") && isSpam) {
                 e.getChannel().sendMessage("Need help with that? Yes or no?").queue();
             }
         }
