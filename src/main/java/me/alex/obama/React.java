@@ -116,6 +116,12 @@ public class React extends ListenerAdapter {
                     .queue();
         }
 
+        if (e.getMessage().getContentRaw().equals("+Back") && e.getAuthor() != e.getJDA().getSelfUser()){
+            MessageHistory prevMessg = e.getChannel().getHistory();
+            e.getChannel().sendMessage("Guess who's back, back again\n" +
+                      e.getAuthor().getName() + "'s back, tell a friend").queue();
+        }
+
         if (e.getAuthor() != e.getJDA().getSelfUser()) {
             List<String> words = SwearCheck.containsSwear(e.getMessage().getContentRaw());
             try {
