@@ -83,7 +83,7 @@ public class React extends ListenerAdapter {
                 e.getChannel().sendMessage("You don't have permission (Manage Channels) to make this a place for me to make proper and valuable statements to promote morale and sanity").queue();
         }
 
-        if (e.getMessage().getContentRaw().equals("+Fact") && e.getAuthor() != e.getJDA().getSelfUser()){
+        if (e.getMessage().getContentRaw().equalsIgnoreCase("+fact") && e.getAuthor() != e.getJDA().getSelfUser()){
             MessageHistory prevMessg = e.getChannel().getHistory();
             if (imagebytes == null) {
                 try {
@@ -99,7 +99,7 @@ public class React extends ListenerAdapter {
                     .addFile(imagebytes, "Funny.png")
                     .queue();
         }
-        if (e.getMessage().getContentRaw().equals("+Bad") && e.getAuthor() != e.getJDA().getSelfUser()){
+        if (e.getMessage().getContentRaw().equalsIgnoreCase("+bad") && e.getAuthor() != e.getJDA().getSelfUser()){
             MessageHistory prevMessg = e.getChannel().getHistory();
             if (imagebytes2 == null) {
                 try {
@@ -116,7 +116,7 @@ public class React extends ListenerAdapter {
                     .queue();
         }
 
-        if (e.getMessage().getContentRaw().equals("+Back") && e.getAuthor() != e.getJDA().getSelfUser()){
+        if (e.getMessage().getContentRaw().equalsIgnoreCase("+Back") && e.getAuthor() != e.getJDA().getSelfUser()){
             MessageHistory prevMessg = e.getChannel().getHistory();
             e.getChannel().sendMessage("Guess who's back, back again\n" +
                       e.getAuthor().getName() + "'s back, tell a friend").queue();
@@ -135,6 +135,12 @@ public class React extends ListenerAdapter {
                 }
 
                 boolean isSpam = Main.getConfig().isChannelInRegistry(e.getTextChannel(), ChannelList.ANNOYING);
+
+                if (e.getMessage().getContentRaw().toLowerCase().contains("will") && e.getAuthor() != e.getJDA().getSelfUser() && isSpam){
+                    MessageHistory prevMessg = e.getChannel().getHistory();
+                    e.getChannel().sendMessage("No I don't think you will").queue();
+                }
+
                 if (e.getMessage().getContentRaw().endsWith("?") && isSpam) {
                     e.getChannel().sendMessage("Need help with that? Yes or no?").queue();
                 }
