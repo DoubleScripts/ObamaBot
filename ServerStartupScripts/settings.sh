@@ -1,4 +1,4 @@
-export JAR_VER="1.0-SNAPSHOT"
+export JAR_VER="1.0.0"
 export JARFILE="Obama-${JAR_VER}.jar"
 export JAVACMD="java"
 
