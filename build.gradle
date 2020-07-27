@@ -46,9 +46,9 @@ versioning {
     full = {
         scmInfo ->
 
-            GString suffix = "${scmInfo.branch}-${scmInfo.commit}"
+            GString suffix = "${scmInfo.branch}"
 
-            GString num = scmInfo.tag != null ? "${scmInfo.tag}" : "${scmInfo.abbreviated}.h-${suffix}"
+            GString num = scmInfo.tag != null ? "${scmInfo.tag}" : "${scmInfo.abbreviated}.b-${suffix}"
 
             return "${num}"
 
