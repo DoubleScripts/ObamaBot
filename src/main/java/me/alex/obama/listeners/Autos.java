@@ -1,5 +1,7 @@
-package me.alex.obama;
+package me.alex.obama.listeners;
 
+import me.alex.obama.Main;
+import me.alex.obama.config.ChannelList;
 import net.dv8tion.jda.api.entities.TextChannel;
 import okio.BufferedSource;
 import okio.Okio;
@@ -15,6 +17,8 @@ public class Autos {
     private static List<String> randomLines;
     private static final String FILE = "randLines.txt";
     private final TextChannel channel;
+
+    private LinkedList<String> queueLines = new LinkedList<>();
 
     private int increaseTime = 0;
 
@@ -57,8 +61,12 @@ public class Autos {
                 e.printStackTrace();
             }
         }
-        Random random = new Random();
-        return randomLines.get(random.nextInt(randomLines.size()-1));
+        if (queueLines.isEmpty()) {
+            queueLines = new LinkedList<>(randomLines);
+            Collections.shuffle(queueLines);
+        }
+
+        return queueLines.remove();
 
     }
 
