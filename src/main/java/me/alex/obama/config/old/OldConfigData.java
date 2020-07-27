@@ -1,4 +1,4 @@
-package me.alex.obama;
+package me.alex.obama.config.old;
 
 import java.util.HashMap;
 import java.util.List;

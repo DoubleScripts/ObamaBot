@@ -1,4 +1,4 @@
-package me.alex.obama;
+package me.alex.obama.config;
 
 public enum ChannelList {
 

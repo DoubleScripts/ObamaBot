@@ -1,4 +1,4 @@
-package me.alex.obama;
+package me.alex.obama.config;
 
 import net.dv8tion.jda.api.entities.GuildChannel;
 import org.apache.commons.collections4.list.UnmodifiableList;

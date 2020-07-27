@@ -1,11 +1,9 @@
-package me.alex.obama
+package me.alex.obama.util
 
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.IOException
 import java.util.*
-import java.util.regex.Pattern
-import java.util.stream.Collectors
 
 object SwearCheck {
     private const val SWEAR_WORDS_URL = "https://raw.githubusercontent.com/snguyenthanh/better_profanity/master/better_profanity/profanity_wordlist.txt"

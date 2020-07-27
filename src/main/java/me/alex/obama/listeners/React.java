@@ -1,6 +1,9 @@
-package me.alex.obama;
+package me.alex.obama.listeners;
 
 import com.github.fernthedev.config.common.exceptions.ConfigLoadException;
+import me.alex.obama.Main;
+import me.alex.obama.util.SwearCheck;
+import me.alex.obama.config.ChannelList;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;

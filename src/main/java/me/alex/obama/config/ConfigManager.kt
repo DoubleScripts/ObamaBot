@@ -3,6 +3,8 @@ package me.alex.obama
 import com.github.fernthedev.config.common.Config
 import com.github.fernthedev.config.common.exceptions.ConfigLoadException
 import com.github.fernthedev.fernutils.thread.ThreadUtils
+import me.alex.obama.config.ChannelList
+import me.alex.obama.config.ServerSettings
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.GuildChannel
 import java.util.*

@@ -1,4 +1,4 @@
-package me.alex.obama;
+package me.alex.obama.config;
 
 import java.io.Serializable;
 import java.util.HashMap;
