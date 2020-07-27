@@ -5,6 +5,7 @@ import com.github.fernthedev.config.common.exceptions.ConfigLoadException;
 import com.github.fernthedev.config.gson.GsonConfig;
 import com.github.fernthedev.fernutils.console.ArgumentArrayUtils;
 import kotlin.Unit;
+import me.alex.obama.config.BotConfigData;
 import me.alex.obama.config.ChannelList;
 import me.alex.obama.config.old.OldConfigData;
 import me.alex.obama.listeners.Autos;
