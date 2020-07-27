@@ -2,10 +2,8 @@ package me.alex.obama.listeners;
 
 import me.alex.obama.Main;
 import me.alex.obama.config.ChannelList;
+import me.alex.obama.util.ClassloaderUtil;
 import net.dv8tion.jda.api.entities.TextChannel;
-import okio.BufferedSource;
-import okio.Okio;
-import okio.Source;
 
 import java.io.IOException;
 import java.util.*;
@@ -56,7 +54,7 @@ public class Autos {
     private String getRandomLine() {
         if (randomLines == null) {
             try {
-                randomLines = readLines(FILE);
+                randomLines = ClassloaderUtil.readLines(FILE);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -70,24 +68,7 @@ public class Autos {
 
     }
 
-    private List<String> readLines(String file) throws IOException {
-        List<String> lines = new ArrayList<>();
 
-        ClassLoader classLoader = Main.class.getClassLoader();
-
-        try (Source fileSource = Okio.source(Objects.requireNonNull(classLoader.getResourceAsStream(file)));
-             BufferedSource bufferedSource = Okio.buffer(fileSource)) {
-
-            while (true) {
-                String line = bufferedSource.readUtf8Line();
-                if (line == null) break;
-
-                lines.add(line);
-            }
-        }
-
-        return lines;
-    }
 
     public static Map<Long, Autos> getAutoInstances() {
         return autoInstances;

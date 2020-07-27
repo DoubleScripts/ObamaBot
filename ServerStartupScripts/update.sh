@@ -63,7 +63,7 @@ update() {
 buildJar() {
   copyJar=$1
 
-  mvn clean package
+  gradle clean build
 
   mvnResult="$?"
 
@@ -71,7 +71,7 @@ buildJar() {
     >&2 echo "Unable to build jar. Malformed java code? Running with previous version"
   else
     if [ "$copyJar" ] ; then
-      cp ./target/"${JARFILE}" ./"${JARFILE}"
+      cp ./build/libs/"${JARFILE}" ./"${JARFILE}"
     fi
   fi
 

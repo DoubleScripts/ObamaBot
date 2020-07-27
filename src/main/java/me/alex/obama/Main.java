@@ -8,6 +8,7 @@ import kotlin.Unit;
 import me.alex.obama.config.BotConfigData;
 import me.alex.obama.config.ChannelList;
 import me.alex.obama.config.old.OldConfigData;
+import me.alex.obama.data.BuildData;
 import me.alex.obama.listeners.Autos;
 import me.alex.obama.listeners.React;
 import net.dv8tion.jda.api.JDA;
@@ -23,7 +24,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -119,7 +119,7 @@ public class Main {
         JDA jda = null;
         React react = new React();
         jdaBuilder.addEventListeners(react);
-        jdaBuilder.setActivity(Activity.watching("+Fact. ID: " + UUID.randomUUID()));
+        jdaBuilder.setActivity(Activity.watching("+Fact. Version: " + BuildData.getBuildData().getGitVersion()));
         try {
             jda = jdaBuilder.build();
         } catch (LoginException e) {
