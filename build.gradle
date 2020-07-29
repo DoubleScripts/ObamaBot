@@ -162,5 +162,5 @@ sourceSets {
 }
 
 application {
-    mainClass = 'me.alex.obama.Main'
+    mainClassName = 'me.alex.obama.Main'
 }
