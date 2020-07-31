@@ -6,8 +6,9 @@ import java.io.IOException
 import java.util.*
 
 object SwearCheck {
-    private const val SWEAR_WORDS_URL = "https://raw.githubusercontent.com/snguyenthanh/better_profanity/master/better_profanity/profanity_wordlist.txt"
-    private var swearWords: List<String> = ArrayList()
+    private const val SWEAR_WORDS_URL_EN = "https://raw.githubusercontent.com/chucknorris-io/swear-words/master/en"
+    private const val SWEAR_WORDS_URL_ES = "https://raw.githubusercontent.com/chucknorris-io/swear-words/master/es"
+    private var swearWords: MutableList<String> = ArrayList()
     private val HTTP_CLIENT = OkHttpClient()
 
     @Throws(IOException::class)
@@ -42,14 +43,15 @@ object SwearCheck {
 
         // Ignore casing
         swearWords.filter { message.toLowerCase().contains(Regex("\\b${it.toLowerCase()}\\b")) }
-                .toCollection(strings);
+                .toCollection(strings)
 
         return strings
     }
 
     init {
         try {
-            swearWords = readUrl(SWEAR_WORDS_URL)
+            swearWords.addAll(readUrl(SWEAR_WORDS_URL_EN))
+            swearWords. addAll(readUrl(SWEAR_WORDS_URL_ES))
         } catch (e: IOException) {
             e.printStackTrace()
         }
