@@ -63,7 +63,7 @@ update() {
 buildJar() {
   copyJar=$1
 
-  gradle clean build
+  ./gradlew clean build
 
   mvnResult="$?"
 
