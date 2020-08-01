@@ -9,6 +9,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.3.72'
     id 'net.nemerosa.versioning' version '2.12.1'
 }
+apply plugin: 'application'
 apply plugin: 'kotlin'
 
 group = 'me.alex.obama'
@@ -158,4 +159,8 @@ tasks.withType(JavaCompile) {
 sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
     main.kotlin.srcDirs += 'src/main/java'
+}
+
+application {
+    mainClassName = 'me.alex.obama.Main'
 }
