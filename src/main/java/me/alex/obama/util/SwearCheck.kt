@@ -42,6 +42,7 @@ object SwearCheck {
         val strings: MutableList<String> = ArrayList()
 
         // Ignore casing
+        // The regex checks if the word is exactly the word e.g "hell" will not catch "hello"
         swearWords.filter { message.toLowerCase().contains(Regex("\\b${it.toLowerCase()}\\b")) }
                 .toCollection(strings)
 
@@ -51,7 +52,7 @@ object SwearCheck {
     init {
         try {
             swearWords.addAll(readUrl(SWEAR_WORDS_URL_EN))
-            swearWords. addAll(readUrl(SWEAR_WORDS_URL_ES))
+            swearWords.addAll(readUrl(SWEAR_WORDS_URL_ES))
         } catch (e: IOException) {
             e.printStackTrace()
         }
