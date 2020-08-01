@@ -29,6 +29,7 @@ public class React extends ListenerAdapter {
     private final Map<String, BotCommand> commands = new HashMap<>();
 
     public React() {
+        // TODO: Add command documentation
         registerCommand(new BotCommand("spam", e ->
                 toggleConfig(e, ChannelList.SPAM, "Will spam: ", "You don't have permission (Manage Channels) to make this a place for me to make proper and valuable statements to promote morale and sanity")));
 
