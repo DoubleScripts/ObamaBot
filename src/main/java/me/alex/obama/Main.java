@@ -1,13 +1,12 @@
 package me.alex.obama;
 
 import com.github.fernthedev.config.common.Config;
-import com.github.fernthedev.config.common.exceptions.ConfigLoadException;
 import com.github.fernthedev.config.gson.GsonConfig;
 import com.github.fernthedev.fernutils.console.ArgumentArrayUtils;
 import kotlin.Unit;
 import me.alex.obama.config.BotConfigData;
 import me.alex.obama.config.ChannelList;
-import me.alex.obama.config.old.OldConfigData;
+import me.alex.obama.data.BuildData;
 import me.alex.obama.listeners.Autos;
 import me.alex.obama.listeners.React;
 import net.dv8tion.jda.api.JDA;
@@ -23,7 +22,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -47,44 +45,6 @@ public class Main {
             try {
                 config = new ConfigManager<>(new GsonConfig<>(new BotConfigData(), CONFIG_FIlE));
                 config.load();
-
-
-                // TODO: Remove this temporary migration code
-                // Attempt migration
-                try {
-                    BotConfigData botConfigData = new BotConfigData();
-
-                    GsonConfig<OldConfigData> oldConfig = new GsonConfig<>(new OldConfigData(), CONFIG_FIlE);
-                    oldConfig.load();
-
-                    // If config values are not equal
-                    if (
-                            !oldConfig.getConfigData().getToken().equals(config.getConfigData().getToken()) ||
-                                    (!oldConfig.getConfigData().getBotSpamChannels().isEmpty() && config.getConfigData().getGuildSettingsMap().isEmpty())
-                    ) {
-
-                        System.out.println("Migrating old config values!");
-
-                        botConfigData.setToken(oldConfig.getConfigData().getToken());
-                        ConfigManager<? extends Config<BotConfigData>> testConfig = new ConfigManager<>(new GsonConfig<>(botConfigData, CONFIG_FIlE));
-
-
-                        oldConfig.getConfigData().getBotSpamChannels().forEach((guildId, channelIds) -> channelIds.forEach(channelId ->
-                                testConfig.addChannel(guildId, channelId, ChannelList.SPAM))
-                        );
-
-                        testConfig.save();
-                        config = testConfig;
-                        System.out.println("Successfully migrated and saved old config values!");
-                    }
-                    //
-                    //
-
-
-                } catch (ConfigLoadException e) {
-                    e.printStackTrace();
-                }
-
             } catch (Exception ee) {
                 ee.printStackTrace();
                 config = new ConfigManager<>(new GsonConfig<>(new BotConfigData(), CONFIG_FIlE));
@@ -111,7 +71,7 @@ public class Main {
         if (token == null) token = config.getConfigData().getToken();
 
         if (token.equals("FIXME")) {
-            System.err.println("Fix the token in config or provide using -token");
+            System.err.println("Fix the token in config or provide using -token {token}");
             System.exit(1);
         }
 
@@ -119,7 +79,7 @@ public class Main {
         JDA jda = null;
         React react = new React();
         jdaBuilder.addEventListeners(react);
-        jdaBuilder.setActivity(Activity.watching("+Fact. ID: " + UUID.randomUUID()));
+        jdaBuilder.setActivity(Activity.watching("+Obama. Version: " + BuildData.getBuildData().getGitVersion()));
         try {
             jda = jdaBuilder.build();
         } catch (LoginException e) {
