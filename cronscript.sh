@@ -11,6 +11,11 @@ cd ./ServerStartupScripts/
 
 echo "Using $(pwd)"
 
+
+echo Install Gradle
+sudo apt install gradle
+
+
 . ./update.sh
 cd "$dir"
 
