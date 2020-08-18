@@ -36,7 +36,8 @@ public class Main {
 
         // Make config backup
         try {
-            FileUtils.copyFile(CONFIG_FIlE, new File("./config.json.backup"));
+            if (CONFIG_FIlE.exists())
+                FileUtils.copyFile(CONFIG_FIlE, new File("./config.json.backup"));
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
