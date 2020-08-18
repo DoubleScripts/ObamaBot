@@ -98,7 +98,8 @@ versioning {
 }
 
 afterEvaluate {
-    version = !versioning.info.dirty ? versioning.info.full : "${project.version}-b${versioning.info.branch}-dirty"
+//    version = !versioning.info.dirty ? versioning.info.full : "${project.version}-b${versioning.info.branch}-dirty"
+    version = !versioning.info.dirty ? versioning.info.full : "${versioning.info.full}-dirty"
     println "Current Version is ${version}"
 
     processResources {
