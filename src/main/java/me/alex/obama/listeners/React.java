@@ -3,6 +3,7 @@ package me.alex.obama.listeners;
 import com.github.fernthedev.config.common.exceptions.ConfigLoadException;
 import me.alex.obama.Main;
 import me.alex.obama.config.ChannelList;
+import me.alex.obama.util.Randomizer;
 import me.alex.obama.util.SwearCheck;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -14,10 +15,11 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.HashMap;
+import java.sql.Time;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public class React extends ListenerAdapter {
 
@@ -25,7 +27,7 @@ public class React extends ListenerAdapter {
     private static byte[] imageBytes2;
 
     private static final String PREFIX = "+";
-
+    private static final String NEED_HELP_CONSTANT = "Need help with that? Yes or no?";
     private final Map<String, BotCommand> commands = new HashMap<>();
 
     public React() {
@@ -110,6 +112,37 @@ public class React extends ListenerAdapter {
 
             e.getChannel().sendMessage(builder.build()).queue();
         }));
+
+        registerCommand(new BotCommand("no", e -> responseToNeedHelp(e, false)), false);
+        registerCommand(new BotCommand("nope", e -> responseToNeedHelp(e, false)), false);
+        registerCommand(new BotCommand("nono", e -> responseToNeedHelp(e, false)), false);
+
+        registerCommand(new BotCommand("sure", e -> responseToNeedHelp(e, true)), false);
+        registerCommand(new BotCommand("yes", e -> responseToNeedHelp(e, true)), false);
+        registerCommand(new BotCommand("definitely", e -> responseToNeedHelp(e, true)), false);
+    }
+
+    public void responseToNeedHelp(MessageReceivedEvent e, boolean yes) {
+        if (e.getChannel().getHistory().retrievePast(2).complete().get(1).getContentRaw().equals(NEED_HELP_CONSTANT)) {
+            if (yes) {
+                e.getChannel().sendMessage("I will send Dr. Phil to you.").queue();
+
+                int time = Randomizer.randomNumber(1, 3);
+
+
+
+                ChronoUnit timeUnit = ChronoUnit.FOREVER;
+
+                while (timeUnit == ChronoUnit.FOREVER || timeUnit == ChronoUnit.HALF_DAYS)
+                    timeUnit = ChronoUnit.values()[Randomizer.randomNumber(0, ChronoUnit.values().length - 1)];
+
+                int timePhil = timeUnit.isTimeBased() ? Randomizer.randomNumber(1, 59) : Randomizer.randomNumber(1, 999);
+
+                e.getChannel().sendMessage("Dr. Phil will arrive after " + timePhil + " " + timeUnit.toString()).queueAfter(time, TimeUnit.SECONDS);
+            } else {
+                e.getChannel().sendMessage("Fine. But you need help. When you do, I won't give you anything").queue();
+            }
+        }
     }
 
     /**
@@ -120,7 +153,21 @@ public class React extends ListenerAdapter {
      */
     public void registerCommand(BotCommand botCommand) {
         // Set to lowercase to avoid case conflict
-        commands.put(PREFIX + botCommand.getName().toLowerCase(), botCommand);
+        registerCommand(botCommand, true);
+    }
+
+    /**
+     * Registers the command
+     * automatically adds the prefix
+     *
+     * @param botCommand The command to add
+     */
+    public void registerCommand(BotCommand botCommand, boolean prefix) {
+        // Set to lowercase to avoid case conflict
+        if (!prefix)
+            commands.put(botCommand.getName().toLowerCase(), botCommand);
+        else
+            commands.put(PREFIX + botCommand.getName().toLowerCase(), botCommand);
     }
 
     /**
@@ -185,8 +232,9 @@ public class React extends ListenerAdapter {
                     e.getChannel().sendMessage("No I don't think you will").queue();
                 }
 
+
                 if (e.getMessage().getContentRaw().endsWith("?") && isSpam) {
-                    e.getChannel().sendMessage("Need help with that? Yes or no?").queue();
+                    e.getChannel().sendMessage(NEED_HELP_CONSTANT).queue();
                 }
             } catch (ConfigLoadException configLoadException) {
                 configLoadException.printStackTrace();
