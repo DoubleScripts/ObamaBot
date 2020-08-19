@@ -1,7 +1,7 @@
-#ObamaBot
+# ObamaBot
 
-Requires:
-systemd
+### Requires:
+* systemd
 
 A poorly concieved bot self described as "funny"
 
