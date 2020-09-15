@@ -228,7 +228,7 @@ public class React extends ListenerAdapter {
 
                 boolean isSpam = Main.getConfig().isChannelInRegistry(e.getTextChannel(), ChannelList.ANNOYING);
 
-                if (e.getMessage().getContentRaw().toLowerCase().contains("will") && e.getAuthor() != e.getJDA().getSelfUser() && isSpam){
+                if (e.getMessage().getContentRaw().toLowerCase().contains("will") && e.getAuthor() != e.getJDA().getSelfUser() && e.getAuthor().isBot() && isSpam){
                     e.getChannel().sendMessage("No I don't think you will").queue();
                 }
 
