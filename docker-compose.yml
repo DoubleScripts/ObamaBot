@@ -1,6 +1,6 @@
 version: "3"
 services:
-  web:
+  obamabot:
     image: antaxiom/obama:latest
     # build: .
     environment:
