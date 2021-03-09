@@ -69,9 +69,9 @@ public class Main {
 
         String token = preToken[0];
 
-        if (token == null) token = config.getConfigData().getToken();
+        if (token == null || token.isEmpty()) token = config.getConfigData().getToken();
 
-        if (token.equals("FIXME")) {
+        if (token.equals("FIXME") || token.isEmpty()) {
             System.err.println("Fix the token in config or provide using -token {token}");
             System.exit(1);
         }

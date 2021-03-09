@@ -146,7 +146,7 @@ publishing {
 jar.getArchiveClassifier().set('old')
 shadowJar {
     minimize()
-    getArchiveClassifier().set('')
+//    getArchiveClassifier().set('-all')
     getArchiveVersion().set(project.ext.projectVer)
 }
 
