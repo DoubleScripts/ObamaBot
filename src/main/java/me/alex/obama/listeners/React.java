@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
+import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -20,6 +21,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class React extends ListenerAdapter {
 
@@ -207,10 +209,13 @@ public class React extends ListenerAdapter {
         }
 
         String rawMessage = e.getMessage().getContentRaw();
-        if (commands.containsKey(rawMessage.toLowerCase())) {
-            BotCommand command = commands.get(rawMessage.toLowerCase());
-
-            command.getEvent().invoke(e);
+        BotCommand command = commands.get(rawMessage.toLowerCase());
+        if (command != null) {
+            try {
+                command.getEvent().invoke(e);
+            } catch (Exception ex) {
+                e.getAuthor().openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage("There was an error running \"" + rawMessage + "\". The error: " + ex.getLocalizedMessage()).queue());
+            }
         }
 
         // Add any non commands like contains here
